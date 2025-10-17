@@ -1,6 +1,6 @@
 #include <cstdio>
 // #include <cstring>
-
+#include <cmath>
 #include "UI/include/UI/Motor.hpp"
 #include "hardware/gpio.h"
 #include "pico/stdio.h"
@@ -44,39 +44,31 @@ int main() {
   start();
 
   motor.setPower(0);
+  ui::Direction dir; 
   
   while (true) {
-    static uint64_t printCounter = 0;
-    static uint64_t lastPrint = 0;
-    #define PRINT_INTERVAL_MS 333
 
-    printCounter = time_us_64();
-    bool shouldPrint = printCounter - lastPrint > PRINT_INTERVAL_MS * 1000;
-    // shouldPrint = true;
-    if(shouldPrint){
-      lastPrint = printCounter;
+    static int power = 0;
+    constexpr int step = 10;
+
+    if (btn1.hasBeenPressed()) {
+      power = power - step;
     }
 
-    // tick();
-    
-    static bool cw = true;
-    if(cw){
+    if (btn2.hasBeenPressed()) {
+      power = power + step;
+    }
+
+    dir = motor.getDirection();
+
+    if (power < 0 && dir == pump_control::ui::Direction::COUNTER_CLOCKWISE) {
       motor.setDirection(pump_control::ui::Direction::CLOCKWISE);
     }
-    else{
+    if (power > 0 && dir == pump_control::ui::Direction::CLOCKWISE) {
       motor.setDirection(pump_control::ui::Direction::COUNTER_CLOCKWISE);
     }
 
-    for(int i = 0; i < 100; i++){
-      motor.setPower(i);
-      sleep_ms(10);
-    }
-
-    for(int i = 0; i < 100; i++){
-      motor.setPower(100 - i);
-      sleep_ms(10);
-    }
-    cw = !cw;
+    motor.setPower(static_cast<float>(abs(power)));
 
   }
 }

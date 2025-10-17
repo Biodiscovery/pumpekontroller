@@ -36,6 +36,9 @@ namespace pump_control::ui {
     void Motor::setDirection(const Direction& dir){
         this->dir = dir;
     }
+    const Direction& Motor::getDirection() const {
+        return dir;
+    }
 
     void Motor::init() {
         pwmA.init();
