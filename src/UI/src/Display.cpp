@@ -13,7 +13,7 @@ Display::Display(int pinSda, int pinScl) : pinSda(pinSda), pinScl(pinScl) {}
 
 void Display::init(){
     i2c_init(i2c0, I2C_FREQ);
-    disp.external_vcc=false;
+    // disp.external_vcc=false;
     // ssd1306_init(&disp, DISPLAY_WIDTH, DISPLAY_HEIGHT, DISPLAY_ADDRESS, i2c0);
     // ssd1306_clear(&disp);
 }

@@ -9,11 +9,12 @@ target_link_libraries(ui PRIVATE
     hardware_i2c
     hardware_pwm
     pico_stdlib
+    pump_control::utils
     # third_party::ssd1306
 )
 
 target_link_libraries(ui PUBLIC
-    third_party::ssd1306
+    # third_party::ssd1306
 )
 
 target_include_directories(ui PUBLIC include)
@@ -22,12 +23,14 @@ target_sources(ui PRIVATE
     include/UI/Button.hpp
     include/UI/Display.hpp
     include/UI/Joystick.hpp
+    include/UI/Motor.hpp
     include/UI/PwmPin.hpp
     include/UI/RgbLed.hpp
     include/UI/Switch.hpp
     src/Button.cpp
     src/Display.cpp
     src/Joystick.cpp
+    src/Motor.cpp
     src/PwmPin.cpp
     src/RgbLed.cpp
     src/Switch.cpp

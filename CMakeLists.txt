@@ -37,6 +37,7 @@ target_link_libraries(pump_control PRIVATE
 )
     
 target_link_libraries(pump_control PRIVATE
+    pump_control::utils
     pump_control::ui
 )
 

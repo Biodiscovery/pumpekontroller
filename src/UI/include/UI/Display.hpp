@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "ssd1306/ssd1306.h"
+// #include "ssd1306/ssd1306.h"
 
 #define I2C_FREQ 400000
 #define DISPLAY_SLEEP_INTERVAL 100
@@ -16,7 +16,7 @@ class Display {
     private:
     int pinSda;
     int pinScl;
-    ssd1306_t disp;
+    // ssd1306_t disp;
     
     public:
     Display(int pinSda, int pinScl);
