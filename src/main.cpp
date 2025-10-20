@@ -44,11 +44,11 @@ int main() {
   start();
 
   motor.setPower(80);
-  ui::Direction dir; 
+  ui::Direction dir = pump_control::ui::Direction::COUNTER_CLOCKWISE; 
   
   while (true) {
 
-    static int power = 0;
+    static int power = 50;
     constexpr int step = 10;
 
     if (btn1.hasBeenPressed()) {
@@ -61,14 +61,19 @@ int main() {
 
     dir = motor.getDirection();
 
-    if (power < 0 && dir == pump_control::ui::Direction::COUNTER_CLOCKWISE) {
+    if (power < 0) {
       motor.setDirection(pump_control::ui::Direction::CLOCKWISE);
     }
-    if (power > 0 && dir == pump_control::ui::Direction::CLOCKWISE) {
+    else if (power > 0) {
       motor.setDirection(pump_control::ui::Direction::COUNTER_CLOCKWISE);
     }
+    else{
+      motor.setDirection(pump_control::ui::Direction::OFF);
+    }
 
-    motor.setPower(static_cast<float>(abs(power)));
+    printf("Power: %d\n", power);
+
+    motor.setPower(abs(power));
 
   }
 }
