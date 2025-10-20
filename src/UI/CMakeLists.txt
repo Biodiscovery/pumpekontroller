@@ -26,6 +26,7 @@ target_sources(ui PRIVATE
     include/UI/Motor.hpp
     include/UI/PwmPin.hpp
     include/UI/RgbLed.hpp
+    include/UI/RotationSpeedMonitor.hpp
     include/UI/Switch.hpp
     src/Button.cpp
     src/Display.cpp
@@ -33,5 +34,6 @@ target_sources(ui PRIVATE
     src/Motor.cpp
     src/PwmPin.cpp
     src/RgbLed.cpp
+    src/RotationSpeedMonitor.cpp
     src/Switch.cpp
 )
