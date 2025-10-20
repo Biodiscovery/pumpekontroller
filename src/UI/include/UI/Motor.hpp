@@ -36,6 +36,8 @@ namespace pump_control::ui {
             void init();
             void setPower(float);
             void setDirection(const Direction& dir);
+            const Direction& getDirection() const;
+
 };
 
 } // namespace pump_control:ui
