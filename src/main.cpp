@@ -43,7 +43,7 @@ int main() {
   
   start();
 
-  motor.setPower(0);
+  motor.setPower(80);
   ui::Direction dir; 
   
   while (true) {
