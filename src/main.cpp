@@ -1,5 +1,4 @@
 #include <cstdio>
-
 #include "hardware/gpio.h"
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
@@ -68,7 +67,6 @@ int main() {
   sleep_ms(1000);
   
   start();
-
   while (true) {
     tick();
   }

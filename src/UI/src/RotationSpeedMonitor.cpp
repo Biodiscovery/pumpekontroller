@@ -27,11 +27,13 @@ namespace pump_control::ui {
     void RotationSpeedMonitor::init() {
         adc_init();
         adc_gpio_init(pin);
-        if(pin != 26 && pin != 27){
+        if(pin != 26 && pin != 27 && pin != 28){
             while(true){
-                printf("!!!EXTREME FAILURE!!! Only pins GPIO26 and GPIO27 can be used for ADC.\n");
+                printf("!!!EXTREME FAILURE!!! Only pins GPIO26, GPIO27 and GPIO28 can be used for ADC.\n");
             }
         }
+
+        if (pin == 26) adc_select_input(0); else if (pin == 27) adc_select_input(1); else adc_select_input(2);
 
         // Seed EMA with initial values. Only makes a difference if motor is already spinning.
         uint32_t acc = 0;
@@ -58,7 +60,7 @@ namespace pump_control::ui {
     static constexpr float kHyst           = 16.0f;     // hysteresis to re-arm
     
     void RotationSpeedMonitor::tick() {
-        if (pin == 26) adc_select_input(0); else adc_select_input(1);
+        if (pin == 26) adc_select_input(0); else if (pin == 27) adc_select_input(1); else adc_select_input(2);
 
         // Update EMAs with a few fresh samples this tick
         for (int i = 0; i < kSamplesPerTick; ++i) {
