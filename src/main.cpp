@@ -80,18 +80,17 @@ int main() {
     // printf("Power: %d\n", power);
     static uint64_t printCounter = 0;
     static uint64_t lastPrint = 0;
-    #define PRINT_INTERVAL_MS 333
+    #define PRINT_INTERVAL_MS 100
 
     printCounter = time_us_64();
     bool shouldPrint = printCounter - lastPrint > PRINT_INTERVAL_MS * 1000;
     // shouldPrint = true;
     if(shouldPrint){
       lastPrint = printCounter;
-      printf("RPS: %f\n", spinMonitor.getRpm());
+      printf("RPS: %.1f\n", spinMonitor.getRpm());
     }
 
     motor.setPower(abs(power));
-    // sleep_ms(10);
 
   }
 }

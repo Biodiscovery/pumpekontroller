@@ -12,25 +12,12 @@ namespace pump_control::ui {
             int pin;
             int divider;
 
-            struct Buffer {
-                #define NUM_VALUES 8
-
-                volatile uint16_t rawValues[NUM_VALUES];
-                volatile uint16_t *readPtr = rawValues;
-                volatile uint16_t *writePtr = rawValues;
-
-                void measure(int n = NUM_VALUES);
-                void write(uint16_t raw);
-                int sum();
-            } buffer;
-
-            int lastSum = 0;
-            int lastDiff = 0;
-
             uint64_t lastPass = 0;
-            float rpm = 0.f;
+            float rps = 0.f;
 
             bool armed = false;
+            float emaFast = 0.0f;
+            float emaSlow = 0.0f;
 
             void passedMagnet();
 
