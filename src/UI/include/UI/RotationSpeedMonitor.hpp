@@ -26,7 +26,7 @@ namespace pump_control::ui {
             RotationSpeedMonitor(int pin, int divider);
             void init();
             void tick();
-            float getRpm();
+            float getRps() const;
 };
 
 } // namespace pump_control:ui

@@ -86,7 +86,7 @@ namespace pump_control::ui {
 
     }
 
-    float RotationSpeedMonitor::getRpm(){
+    float RotationSpeedMonitor::getRps() const{
         return rps;
     }
 
