@@ -11,6 +11,7 @@
 #include "UI/Button.hpp"
 #include "UI/PwmPin.hpp"
 #include "UI/Motor.hpp"
+#include "UI/RotationSpeedController.hpp"
 
 #include "Web/WebServer.hpp"
 
