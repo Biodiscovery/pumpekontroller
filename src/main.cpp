@@ -1,79 +1,100 @@
 #include <cstdio>
-// #include <cstring>
 #include <cmath>
-#include "UI/include/UI/Motor.hpp"
-#include "hardware/gpio.h"
+
 #include "pico/stdio.h"
 #include "pico/stdlib.h"
+/* #include "pico/cyw43_arch.h" */
 
+#include "UI/include/UI/Motor.hpp"
+#include "hardware/gpio.h"
 #include "board.hpp"
 #include "UI/Button.hpp"
-// #include "PumpController/PumpController.hpp"
 #include "UI/PwmPin.hpp"
 #include "UI/Motor.hpp"
 
-// #define RX_BUF_SIZE 4
-// #define MSG_BUF_SIZE 64
+#include "Web/WebServer.hpp"
 
+/* #include "WebServer.hpp"      
+ */
 using namespace pump_control;
 
-// PumpController PumpController;
-
+// Hardware buttons
 ui::Button btn1(PIN_BTN_1);
 ui::Button btn2(PIN_BTN_2);
+
+// Motor driver
 ui::Motor motor(PIN_MOTOR_A, PIN_MOTOR_B, 20.f, 50.f);
 
+// Shared power level for both buttons + web interface
+static int power = 0;
+constexpr int step = 10;
+
+// ----------------------
+// Setup
+// ----------------------
 void start() {
-  printf("----- Akselpumpe -----\n");
-  // PumpController.init();
-  btn1.init();
-  btn2.init();
-  motor.init();
-  sleep_ms(1000);
-  printf("READY.\n\n");
+    printf("----- Akselpumpe -----\n");
+
+    btn1.init();
+    btn2.init();
+    motor.init();
+    
+
+    sleep_ms(1000);
+    printf("READY.\n\n");
 }
 
-void tick() {
-  //
-}
-
-int main() {
-  stdio_init_all();
-  sleep_ms(1000);
-  
-  start();
-
-  motor.setPower(80);
-  ui::Direction dir = pump_control::ui::Direction::COUNTER_CLOCKWISE; 
-  
-  while (true) {
-
-    static int power = 50;
-    constexpr int step = 10;
-
-    if (btn1.hasBeenPressed()) {
-      power = power - step;
-    }
-
-    if (btn2.hasBeenPressed()) {
-      power = power + step;
-    }
-
-    dir = motor.getDirection();
-
+// ----------------------
+// Apply logic to motor
+// ----------------------
+void apply_motor_logic() {
     if (power < 0) {
-      motor.setDirection(pump_control::ui::Direction::CLOCKWISE);
+        motor.setDirection(ui::Direction::CLOCKWISE);
     }
     else if (power > 0) {
-      motor.setDirection(pump_control::ui::Direction::COUNTER_CLOCKWISE);
+        motor.setDirection(ui::Direction::COUNTER_CLOCKWISE);
     }
-    else{
-      motor.setDirection(pump_control::ui::Direction::OFF);
+    else {
+        motor.setDirection(ui::Direction::OFF);
     }
-
-    printf("Power: %d\n", power);
 
     motor.setPower(abs(power));
+}
 
-  }
+// ----------------------
+// MAIN
+// ----------------------
+int main() {
+    stdio_init_all();
+    sleep_ms(1000);
+
+    start();
+    WebServer::init();
+    
+    
+    // --------------------------
+    // Main loop
+    // --------------------------
+    while (true) {
+        WebServer::loop();
+        // Buttons
+        if (btn1.hasBeenPressed()) {
+            power -= step;
+        }
+
+        if (btn2.hasBeenPressed()) {
+            power += step;
+        }
+
+        // Clamp?
+        if (power > 100) power = 100;
+        if (power < -100) power = -100;
+
+        // Apply motor control
+        apply_motor_logic();
+
+        // printf("Power: %d\n", power);
+
+        sleep_ms(10);
+    }
 }

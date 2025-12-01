@@ -1,16 +1,14 @@
 cmake_minimum_required(VERSION 3.13...3.27)
 
-include(${CMAKE_SOURCE_DIR}/cmake/pico_sdk_import.cmake)
 
+include(${CMAKE_SOURCE_DIR}/cmake/pico_sdk_import.cmake)
 project(pump_control CXX C ASM)
+set(PICO_BOARD pico_w)
 
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
 pico_sdk_init()
 
-set(CMAKE_ASM_COMPILER arm-none-eabi-gcc)
-set(CMAKE_C_COMPILER arm-none-eabi-gcc)
-set(CMAKE_CXX_COMPILER arm-none-eabi-g++)
 
 add_executable(pump_control)
 
@@ -21,14 +19,22 @@ target_sources(pump_control PRIVATE
     src/board.hpp
     src/PumpController/include/PumpController/PumpController.hpp
     src/PumpController/src/PumpController.cpp
+    src/Web/src/WebServer.cpp
+    )
+
+target_include_directories(pump_control PUBLIC 
+src/PumpController/include
+src/Web/include
 )
 
-target_include_directories(pump_control PUBLIC src/PumpController/include)
 
-target_link_libraries(pump_control PRIVATE
-    pico_stdlib
-    hardware_i2c
-    hardware_pwm
+target_link_libraries(pump_control PUBLIC
+hardware_i2c
+hardware_pwm
+pico_cyw43_arch_lwip_threadsafe_background
+pico_lwip_http
+pico_stdlib
+    
     # hardware_flash
 )
 
@@ -39,8 +45,8 @@ target_link_libraries(pump_control PRIVATE
 target_link_libraries(pump_control PRIVATE
     pump_control::utils
     pump_control::ui
+    pump_control::web
 )
-
 
 if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "No build type selected, default to DEBUG")
