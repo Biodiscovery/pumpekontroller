@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Akselpumpe</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        text-align: center;
+        padding-top: 40px;
+        background: #f0f0f0;
+    }
+    h1 {
+        margin-bottom: 10px;
+    }
+    #power {
+        font-size: 28px;
+        margin-bottom: 20px;
+        font-weight: bold;
+    }
+    button {
+        width: 200px;
+        height: 50px;
+        margin: 10px;
+        font-size: 18px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+    }
+    .start { background: #4CAF50; color: white; }
+    .stop { background: #f44336; color: white; }
+    .up { background: #2196F3; color: white; }
+    .down { background: #ff9800; color: white; }
+</style>
+</head>
+
+<body>
+    <h1>Akselpumpe</h1>
+    <div id="power">Power: loading...</div>
+
+    <button class="start" onclick="send('/start')">Start</button><br>
+    <button class="stop" onclick="send('/stop')">Stop</button><br>
+    <button class="up" onclick="send('/upspeed')">Speed Up</button><br>
+    <button class="down" onclick="send('/downspeed')">Speed Down</button>
+
+<script>
+function send(cmd) {
+    fetch(cmd)
+        .then(r => console.log("Sent:", cmd))
+        .catch(e => console.error(e));
+}
+
+function updateStatus() {
+    fetch('/status')
+        .then(resp => resp.text())
+        .then(text => {
+            document.getElementById("power").textContent = "Power: " + text + "%";
+        })
+        .catch(err => {
+            document.getElementById("power").textContent = "Power: offline";
+        });
+}
+
+setInterval(updateStatus, 1000);
+updateStatus();
+</script>
+</body>
+</html>

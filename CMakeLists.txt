@@ -12,6 +12,7 @@ pico_sdk_init()
 
 add_executable(pump_control)
 
+
 add_subdirectory(src)
 
 target_sources(pump_control PRIVATE
@@ -23,8 +24,9 @@ target_sources(pump_control PRIVATE
     )
 
 target_include_directories(pump_control PUBLIC 
-src/PumpController/include
-src/Web/include
+    src/PumpController/include
+    src/Web/include
+    ${PICO_LWIP_CONTRIB_PATH}/apps/httpd  # <-- like the official example
 )
 
 
@@ -33,6 +35,7 @@ hardware_i2c
 hardware_pwm
 pico_cyw43_arch_lwip_threadsafe_background
 pico_lwip_http
+pico_lwip_mdns
 pico_stdlib
     
     # hardware_flash
@@ -46,7 +49,11 @@ target_link_libraries(pump_control PRIVATE
     pump_control::utils
     pump_control::ui
     pump_control::web
+    pump_control::controller
 )
+
+
+
 
 if (NOT CMAKE_BUILD_TYPE)
   message(STATUS "No build type selected, default to DEBUG")

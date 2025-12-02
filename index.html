@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Pump UI</title>
+</head>
+<body>
+<h1>Pump Controller</h1>
+
+<button onclick="send('/start')">Start</button>
+<button onclick="send('/stop')">Stop</button>
+<button onclick="send('/upspeed')">Up</button>
+<button onclick="send('/downspeed')">Down</button>
+
+<h2>Power: <span id="power">...</span></h2>
+
+<script>
+    const PICO = "http://pico.local";  // <-- set your Pico IP
+
+    function send(endpoint) {
+        fetch(PICO + endpoint)
+            .then(r => console.log("Sent: ", endpoint));
+    }
+
+    setInterval(() => {
+        fetch(PICO + "/status")
+            .then(r => r.text())
+            .then(txt => {
+                let p = txt.match(/power=(\-?\d+)/);
+                if (p) document.getElementById("power").textContent = p[1];
+            });
+    }, 500);
+</script>
+</body>
+</html>

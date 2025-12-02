@@ -2,7 +2,7 @@
 add_library(ui)
 add_library(pump_control::ui ALIAS ui)
 
-target_link_libraries(ui PRIVATE
+target_link_libraries(ui PUBLIC
     hardware_adc
     hardware_clocks
     hardware_gpio

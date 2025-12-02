@@ -1,8 +1,9 @@
 #pragma once
-#include <cstdint>
+#include "PumpController/PumpController.hpp"
 
 class WebServer {
 public:
-    static void init();    // Start WiFi and HTTP server
-    static void loop();    // Called repeatedly in main loop
+    static void init(pump_control::PumpController& controller);
+    static void loop();
+    static pump_control::PumpController* ctrl;
 };
